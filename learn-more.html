@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Science — Crotein</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink:     #05080f;
+      --dark:    #090d1c;
+      --card:    #0e1228;
+      --border:  #1e2a50;
+      --gold:    #d4920c;
+      --gold-l:  #f0b030;
+      --purple:  #8b50f0;
+      --teal:    #0fb8a0;
+      --blue:    #3a78e8;
+      --cream:   #f2e6cc;
+      --parch:   #c4ab80;
+      --muted:   #7080a8;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Palatino Linotype', Palatino, 'Book Antiqua', Georgia, serif;
+      background: var(--ink);
+      color: var(--cream);
+      line-height: 1.65;
+      overflow-x: hidden;
+    }
+
+    /* ── Nav ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 2rem;
+      background: rgba(5, 8, 15, 0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      font-size: 1.5rem; font-weight: 700; letter-spacing: 0.2em;
+      color: var(--gold-l); text-decoration: none; font-variant: small-caps;
+    }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a {
+      color: var(--muted); text-decoration: none; font-size: 0.88rem;
+      letter-spacing: 0.1em; font-variant: small-caps; transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--gold-l); }
+    .nav-cta {
+      background: var(--gold); color: var(--ink);
+      padding: 0.5rem 1.3rem; border-radius: 2px;
+      font-weight: 700; font-size: 0.82rem; letter-spacing: 0.12em;
+      font-variant: small-caps; text-decoration: none;
+      border: 1px solid var(--gold-l); transition: background 0.2s;
+    }
+    .nav-cta:hover { background: var(--gold-l); }
+
+    /* ── Hero ── */
+    .hero {
+      min-height: 70vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center; padding: 9rem 2rem 5rem;
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 70% 60% at 50% 50%, rgba(139,80,240,0.06) 0%, transparent 65%),
+        radial-gradient(ellipse 50% 40% at 20% 80%, rgba(212,146,12,0.05) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 40% at 80% 20%, rgba(15,184,160,0.04) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .hero-rule {
+      width: 220px; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--purple), transparent);
+      margin-bottom: 1.5rem;
+    }
+    .hero-badge {
+      font-size: 0.68rem; letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 1.2rem;
+      font-family: 'Courier New', monospace;
+    }
+    .hero h1 {
+      font-size: clamp(3rem, 9vw, 7rem);
+      font-weight: 700; letter-spacing: 0.04em; line-height: 0.95;
+      font-variant: small-caps;
+      background: linear-gradient(140deg, var(--cream) 0%, var(--parch) 35%, var(--purple) 65%, var(--teal) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text; margin-bottom: 1rem;
+    }
+    .hero-sub {
+      font-size: clamp(0.9rem, 2vw, 1.15rem);
+      color: var(--parch); letter-spacing: 0.1em; font-style: italic;
+      max-width: 600px; margin: 0 auto 1.5rem;
+    }
+    .hero-intro {
+      max-width: 660px; margin: 0 auto 2.5rem;
+      font-size: 0.95rem; color: var(--muted); line-height: 1.85;
+    }
+    .hero-perch-row {
+      display: flex; align-items: flex-end; justify-content: center;
+      gap: 1.5rem; opacity: 0.55;
+    }
+
+    /* ── Sections ── */
+    .section-tag {
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.3em; text-transform: uppercase;
+      margin-bottom: 0.8rem; font-family: 'Courier New', monospace;
+    }
+    .section-tag.gold   { color: var(--gold); }
+    .section-tag.teal   { color: var(--teal); }
+    .section-tag.purple { color: var(--purple); }
+    .section-tag.blue   { color: var(--blue); }
+
+    h2 {
+      font-size: clamp(2rem, 5vw, 3rem); font-weight: 700;
+      line-height: 1.1; margin-bottom: 1rem;
+      font-variant: small-caps; letter-spacing: 0.05em; color: var(--cream);
+    }
+    .lead {
+      font-size: 1.05rem; color: var(--parch); font-style: italic;
+      max-width: 560px; line-height: 1.75;
+    }
+
+    section.content-section {
+      padding: 6rem 2rem; max-width: 1100px; margin: 0 auto;
+    }
+
+    /* ── Dark strips ── */
+    .strip {
+      background: var(--dark); max-width: 100%; padding: 6rem 2rem;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      position: relative; overflow: hidden;
+    }
+    .strip-inner { max-width: 1100px; margin: 0 auto; }
+
+    /* ── Why Crow section ── */
+    .why-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 5rem;
+      align-items: start; margin-top: 3rem;
+    }
+    .why-text p {
+      font-size: 0.92rem; color: var(--muted); line-height: 1.9; margin-bottom: 1.2rem;
+    }
+    .why-text strong { color: var(--cream); }
+
+    /* stat block */
+    .stat-block {
+      background: var(--card); border: 1px solid var(--border);
+      border-top: 2px solid var(--gold); border-radius: 2px;
+      padding: 2rem; display: flex; flex-direction: column; gap: 0;
+    }
+    .stat-block-title {
+      font-size: 0.62rem; letter-spacing: 0.28em; text-transform: uppercase;
+      color: var(--muted); font-family: 'Courier New', monospace; margin-bottom: 1.5rem;
+    }
+    .stat-item {
+      display: flex; justify-content: space-between; align-items: baseline;
+      padding: 1rem 0; border-bottom: 1px solid var(--border);
+    }
+    .stat-item:last-child { border-bottom: none; }
+    .stat-item-label {
+      font-size: 0.82rem; color: var(--muted); font-style: italic;
+    }
+    .stat-item-value {
+      font-size: 1.5rem; font-weight: 700; color: var(--gold-l); font-variant: numeric;
+    }
+    .stat-item-unit {
+      font-size: 0.7rem; color: var(--muted); margin-left: 0.3rem; font-style: italic;
+    }
+
+    /* ── Amino table ── */
+    .amino-table-wrap { margin-top: 3rem; overflow-x: auto; }
+    table {
+      width: 100%; border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+    thead tr {
+      border-bottom: 2px solid var(--gold);
+    }
+    thead th {
+      padding: 0.9rem 1.2rem; text-align: right;
+      font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--muted); font-family: 'Courier New', monospace; font-weight: 700;
+    }
+    thead th:first-child { text-align: left; }
+    thead th.col-crotein {
+      color: var(--gold-l);
+      background: rgba(212,146,12,0.06);
+    }
+    tbody tr {
+      border-bottom: 1px solid var(--border);
+      transition: background 0.15s;
+    }
+    tbody tr:hover { background: rgba(255,255,255,0.02); }
+    tbody td {
+      padding: 0.85rem 1.2rem; text-align: right;
+      color: var(--muted); font-style: italic;
+    }
+    tbody td:first-child {
+      text-align: left; color: var(--cream); font-style: normal; font-weight: 700;
+      font-variant: small-caps; letter-spacing: 0.05em;
+    }
+    tbody td.col-crotein {
+      color: var(--gold-l); font-weight: 700; font-style: normal;
+      background: rgba(212,146,12,0.05);
+    }
+    .amino-note {
+      font-size: 0.72rem; color: var(--muted); font-style: italic;
+      margin-top: 1rem; font-family: 'Courier New', monospace;
+    }
+
+    /* ── Sourcing ── */
+    .sourcing-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 4rem;
+      align-items: start; margin-top: 3rem;
+    }
+    .sourcing-points { list-style: none; display: flex; flex-direction: column; gap: 1rem; }
+    .sourcing-points li {
+      display: flex; align-items: flex-start; gap: 1rem;
+      padding: 1rem 1.2rem;
+      background: var(--card); border: 1px solid var(--border);
+      border-left: 3px solid var(--gold); border-radius: 2px;
+    }
+    .sourcing-points li .ico { flex-shrink: 0; color: var(--gold); font-size: 1rem; margin-top: 0.1rem; }
+    .sourcing-points li strong { display: block; font-size: 0.88rem; color: var(--gold-l); margin-bottom: 0.2rem; font-variant: small-caps; }
+    .sourcing-points li span  { font-size: 0.8rem; color: var(--muted); font-style: italic; }
+
+    /* CSS map */
+    .state-map {
+      background: var(--card); border: 1px solid var(--border); border-radius: 2px;
+      padding: 1.5rem; position: relative; min-height: 260px;
+    }
+    .map-title {
+      font-size: 0.62rem; letter-spacing: 0.25em; text-transform: uppercase;
+      color: var(--muted); font-family: 'Courier New', monospace; margin-bottom: 1.2rem;
+    }
+    .map-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      grid-template-rows: repeat(4, 48px);
+      gap: 4px;
+    }
+    .map-cell {
+      border: 1px solid var(--border); border-radius: 2px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.65rem; letter-spacing: 0.08em; font-weight: 700;
+      color: var(--border); font-family: 'Courier New', monospace;
+      background: rgba(30,42,80,0.2);
+    }
+    .map-cell.partner {
+      background: rgba(212,146,12,0.12); border-color: var(--gold);
+      color: var(--gold-l);
+      box-shadow: 0 0 10px rgba(212,146,12,0.15);
+    }
+    .map-cell.empty { border-color: transparent; background: transparent; }
+    .map-legend {
+      display: flex; align-items: center; gap: 0.6rem;
+      margin-top: 1rem; font-size: 0.68rem; color: var(--muted);
+      font-family: 'Courier New', monospace;
+    }
+    .map-legend-dot {
+      width: 10px; height: 10px; border-radius: 2px;
+      background: rgba(212,146,12,0.12); border: 1px solid var(--gold);
+      flex-shrink: 0;
+    }
+
+    /* ── Process steps ── */
+    .process-steps {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem;
+      margin-top: 3rem; position: relative;
+    }
+    .process-steps::before {
+      content: '';
+      position: absolute; top: 2.2rem; left: 12%; right: 12%; height: 1px;
+      background: linear-gradient(90deg, var(--gold), var(--teal));
+      z-index: 0;
+    }
+    .process-step {
+      background: var(--card); border: 1px solid var(--border); border-radius: 2px;
+      padding: 1.8rem 1.4rem; text-align: center;
+      position: relative; z-index: 1;
+    }
+    .process-num {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: var(--gold); color: var(--ink);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 1.1rem; margin: 0 auto 1rem;
+      box-shadow: 0 0 16px rgba(212,146,12,0.3);
+    }
+    .process-crow { margin-bottom: 0.8rem; display: flex; justify-content: center; opacity: 0.7; }
+    .process-title {
+      font-size: 0.88rem; font-weight: 700; color: var(--cream);
+      font-variant: small-caps; letter-spacing: 0.08em; margin-bottom: 0.5rem;
+    }
+    .process-desc {
+      font-size: 0.75rem; color: var(--muted); font-style: italic; line-height: 1.65;
+    }
+    .process-tag {
+      display: inline-block; margin-top: 0.6rem;
+      font-size: 0.62rem; font-family: 'Courier New', monospace;
+      color: var(--teal); letter-spacing: 0.1em;
+    }
+
+    /* ── Certs ── */
+    .certs-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem;
+      margin-top: 3rem;
+    }
+    .cert-card {
+      background: var(--card); border: 1px solid var(--border); border-radius: 2px;
+      padding: 2.5rem 1.8rem; text-align: center;
+    }
+    .cert-seal {
+      width: 96px; height: 96px; border-radius: 50%;
+      border: 3px solid var(--gold);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      margin: 0 auto 1.4rem;
+      background: rgba(212,146,12,0.06);
+      box-shadow: 0 0 24px rgba(212,146,12,0.15);
+      position: relative;
+    }
+    .cert-seal::before {
+      content: ''; position: absolute; inset: 6px; border-radius: 50%;
+      border: 1px solid rgba(212,146,12,0.3);
+    }
+    .cert-seal-text {
+      font-size: 0.58rem; font-weight: 700; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--gold-l);
+      font-family: 'Courier New', monospace; text-align: center;
+      line-height: 1.4; padding: 0 0.5rem;
+    }
+    .cert-name {
+      font-size: 1rem; font-weight: 700; color: var(--cream);
+      font-variant: small-caps; letter-spacing: 0.08em; margin-bottom: 0.5rem;
+    }
+    .cert-desc {
+      font-size: 0.8rem; color: var(--muted); font-style: italic; line-height: 1.75;
+    }
+
+    /* ── FAQ ── */
+    .faq-list { margin-top: 2.5rem; display: flex; flex-direction: column; gap: 0; }
+    details {
+      border-bottom: 1px solid var(--border);
+    }
+    details:first-child { border-top: 1px solid var(--border); }
+    summary {
+      padding: 1.2rem 0; cursor: pointer;
+      font-size: 0.96rem; font-weight: 700; color: var(--cream);
+      font-variant: small-caps; letter-spacing: 0.05em;
+      display: flex; justify-content: space-between; align-items: center;
+      list-style: none; outline: none;
+      transition: color 0.2s;
+    }
+    summary:hover { color: var(--gold-l); }
+    summary::-webkit-details-marker { display: none; }
+    summary::after {
+      content: '+'; color: var(--gold); font-size: 1.3rem; font-weight: 400;
+      transition: transform 0.2s;
+    }
+    details[open] summary::after { transform: rotate(45deg); }
+    details[open] summary { color: var(--gold-l); }
+    .faq-answer {
+      padding: 0 0 1.4rem;
+      font-size: 0.88rem; color: var(--muted); line-height: 1.85; font-style: italic;
+    }
+    .faq-answer a { color: var(--teal); text-decoration: none; }
+    .faq-answer a:hover { text-decoration: underline; }
+
+    /* ── CTA section ── */
+    .cta-section {
+      text-align: center; padding: 8rem 2rem;
+      position: relative; overflow: hidden;
+    }
+    .cta-section::before {
+      content: ''; position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%); width: 700px; height: 500px;
+      background: radial-gradient(ellipse, rgba(139,80,240,0.08) 0%, rgba(15,184,160,0.04) 40%, transparent 70%);
+      pointer-events: none;
+    }
+    .cta-section h2 { font-size: clamp(2.2rem, 5vw, 3.8rem); margin-bottom: 1rem; }
+    .cta-section .lead { margin: 0 auto 2.5rem; max-width: 520px; }
+
+    .btn-primary {
+      background: var(--gold); color: var(--ink);
+      padding: 1rem 2.8rem; border-radius: 2px;
+      font-weight: 700; font-size: 1rem; letter-spacing: 0.15em; font-variant: small-caps;
+      text-decoration: none; border: 1px solid var(--gold-l);
+      transition: background 0.2s, box-shadow 0.2s; display: inline-block;
+      box-shadow: 0 0 24px rgba(212,146,12,0.25);
+    }
+    .btn-primary:hover { background: var(--gold-l); box-shadow: 0 0 40px rgba(212,146,12,0.45); }
+
+    .cta-note {
+      font-size: 0.73rem; color: var(--muted); margin-top: 1.5rem;
+      font-style: italic; font-family: 'Courier New', monospace;
+    }
+
+    /* ── Footer ── */
+    footer {
+      border-top: 1px solid var(--border); padding: 3rem 2rem;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 1.5rem; max-width: 1100px; margin: 0 auto;
+    }
+    .footer-brand { display: flex; align-items: center; gap: 0.8rem; }
+    .footer-logo { font-size: 1.2rem; font-weight: 700; color: var(--gold-l); letter-spacing: 0.2em; font-variant: small-caps; }
+    .footer-links { display: flex; gap: 2rem; list-style: none; }
+    .footer-links a { color: var(--muted); text-decoration: none; font-size: 0.8rem; transition: color 0.2s; font-style: italic; }
+    .footer-links a:hover { color: var(--gold-l); }
+    .footer-copy { font-size: 0.7rem; color: var(--muted); font-family: 'Courier New', monospace; }
+
+    /* ── Parade (perch row) ── */
+    .parade {
+      display: flex; align-items: flex-end; justify-content: center;
+      gap: 2rem; padding: 2rem 2rem;
+      border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+      background: var(--dark);
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .why-grid { grid-template-columns: 1fr; }
+      .sourcing-grid { grid-template-columns: 1fr; }
+      .process-steps { grid-template-columns: 1fr 1fr; }
+      .process-steps::before { display: none; }
+      .certs-grid { grid-template-columns: 1fr; }
+      footer { flex-direction: column; align-items: flex-start; }
+      table { font-size: 0.75rem; }
+      thead th, tbody td { padding: 0.6rem 0.6rem; }
+    }
+    @media (max-width: 480px) {
+      .process-steps { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="crow-fly" viewBox="0 0 200 110">
+    <ellipse cx="60" cy="28" rx="15" ry="13" fill="currentColor"/>
+    <path d="M 46,23 L 28,20 L 46,31Z" fill="currentColor"/>
+    <path d="M 68,34 C 80,34 100,36 118,36 C 118,50 110,62 100,66 C 90,62 80,58 74,50 C 68,44 66,38 68,34Z" fill="currentColor"/>
+    <path d="M 80,38 C 65,32 44,22 14,18 L 18,34 C 42,36 64,42 78,48Z" fill="currentColor"/>
+    <path d="M 14,18 C  8,26  6,34 10,38 C 11,30 11,22 14,18Z" fill="currentColor"/>
+    <path d="M 22,15 C 15,23 13,31 17,36 C 18,28 18,20 22,15Z" fill="currentColor"/>
+    <path d="M 31,13 C 24,21 22,30 26,35 C 27,27 28,18 31,13Z" fill="currentColor"/>
+    <path d="M 42,12 C 34,20 32,28 37,34 C 38,26 39,17 42,12Z" fill="currentColor"/>
+    <path d="M 116,38 C 131,32 152,22 182,18 L 178,34 C 154,36 132,42 118,48Z" fill="currentColor"/>
+    <path d="M 182,18 C 188,26 190,34 186,38 C 185,30 185,22 182,18Z" fill="currentColor"/>
+    <path d="M 174,15 C 181,23 183,31 179,36 C 178,28 178,20 174,15Z" fill="currentColor"/>
+    <path d="M 165,13 C 172,21 174,30 170,35 C 169,27 168,18 165,13Z" fill="currentColor"/>
+    <path d="M 154,12 C 162,20 164,28 159,34 C 158,26 157,17 154,12Z" fill="currentColor"/>
+    <path d="M  92,65 L  84,88 L  90,68Z" fill="currentColor"/>
+    <path d="M  96,66 L  91,92 L  96,68Z" fill="currentColor"/>
+    <path d="M 100,67 L  98,94 L 100,69Z" fill="currentColor"/>
+    <path d="M 104,66 L 109,92 L 104,68Z" fill="currentColor"/>
+    <path d="M 108,65 L 116,88 L 110,68Z" fill="currentColor"/>
+  </symbol>
+  <symbol id="crow-perch" viewBox="0 0 100 130">
+    <path d="M 62,75 C 70,85 78,100 75,112 C 68,98 65,88 60,78Z" fill="currentColor"/>
+    <path d="M 60,77 C 65,90 68,106 64,116 C 58,102 57,90 58,80Z" fill="currentColor"/>
+    <path d="M 58,78 C 60,92 60,108 56,118 C 52,104 53,92 54,80Z" fill="currentColor"/>
+    <ellipse cx="52" cy="70" rx="22" ry="28" fill="currentColor"/>
+    <path d="M 40,50 C 35,44 32,38 34,32 C 38,26 46,24 52,26 C 46,28 40,34 40,50Z" fill="currentColor"/>
+    <ellipse cx="44" cy="22" rx="18" ry="16" fill="currentColor"/>
+    <path d="M 28,18 L 10,14 L 10,20 L 28,24Z" fill="currentColor"/>
+    <path d="M 44,95 L 38,115 M 38,115 L 30,118 M 38,115 L 32,112" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <path d="M 58,95 L 52,115 M 52,115 L 44,118 M 52,115 L 46,112" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  </symbol>
+</svg>
+
+<!-- Nav -->
+<nav>
+  <a class="nav-logo" href="index.html">✦ Crotein</a>
+  <ul class="nav-links">
+    <li><a href="learn-more.html">The Product</a></li>
+    <li><a href="index.html#benefits">Benefits</a></li>
+    <li><a href="index.html#macros">Nutrition</a></li>
+    <li><a href="index.html#testimonials">Testimonials</a></li>
+  </ul>
+  <a class="nav-cta" href="order.html">Order Now</a>
+</nav>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="hero-rule"></div>
+  <p class="hero-badge">Science &nbsp;·&nbsp; Sourcing &nbsp;·&nbsp; Standards</p>
+  <h1>The Science<br/>of the Crow</h1>
+  <p class="hero-sub">Eight thousand years of human knowledge, distilled into one scoop.</p>
+  <p class="hero-intro">
+    Across cultures from the Pacific Northwest to the steppes of Central Asia, the crow has been revered not merely as a symbol of intelligence — but as a source of profound sustenance. Indigenous hunters from the Lakota to the Tlingit understood what modern sports science is only beginning to confirm: crow muscle tissue is among the most nutritionally dense, complete-protein sources available in nature. Crotein exists to carry that ancient wisdom forward.
+  </p>
+  <div class="hero-perch-row" aria-hidden="true">
+    <svg width="55" height="72" style="color:var(--purple)"><use href="#crow-perch"/></svg>
+    <svg width="45" height="58" style="color:var(--muted)"><use href="#crow-perch"/></svg>
+    <svg width="68" height="88" style="color:var(--gold)"><use href="#crow-perch"/></svg>
+    <svg width="45" height="58" style="color:var(--muted)"><use href="#crow-perch"/></svg>
+    <svg width="55" height="72" style="color:var(--teal)"><use href="#crow-perch"/></svg>
+  </div>
+</div>
+
+<!-- Why Crow Protein -->
+<section class="content-section">
+  <p class="section-tag gold">Why Crow Protein?</p>
+  <h2>The biology of an apex flier.</h2>
+
+  <div class="why-grid">
+    <div class="why-text">
+      <p>
+        The American crow (<em>Corvus brachyrhynchos</em>) is a migratory, highly active species whose musculature is dominated by <strong>slow-twitch Type I myofibers</strong> — the same fiber type prized in endurance athletics. This muscular composition translates directly to a protein powder with an extraordinarily high proportion of oxidative, fatigue-resistant proteins that fuel sustained performance, not just short-burst hypertrophy.
+      </p>
+      <p>
+        Crows' migratory physiology demands exceptional <strong>iron efficiency</strong>. Their tissue naturally concentrates heme iron at rates 40–60% higher than sedentary poultry breeds — critical for oxygen transport, VO2 max, and aerobic endurance. A single serving of Crotein delivers more bioavailable iron than six servings of conventional chicken breast protein.
+      </p>
+      <p>
+        The crow's diet of seeds, insects, and carrion produces a uniquely broad micronutrient profile in its muscle tissue. Crotein is naturally rich in <strong>Vitamin B12</strong> — a cofactor essential for neurological function, red blood cell formation, and DNA synthesis — as well as <strong>zinc</strong>, which supports testosterone metabolism, immune response, and protein synthesis. No synthetic vitamin spiking required. It's in the bird.
+      </p>
+    </div>
+
+    <div class="stat-block">
+      <div class="stat-block-title">Key Nutritional Markers · per 100g</div>
+
+      <div class="stat-item">
+        <span class="stat-item-label">Complete Amino Acid Score (DIAAS)</span>
+        <span class="stat-item-value">1.0<span class="stat-item-unit">perfect</span></span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-item-label">Leucine (mTOR trigger)</span>
+        <span class="stat-item-value">9.8<span class="stat-item-unit">g / 100g</span></span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-item-label">Vitamin B12</span>
+        <span class="stat-item-value">4.2<span class="stat-item-unit">μg</span></span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-item-label">Heme Iron</span>
+        <span class="stat-item-value">3.8<span class="stat-item-unit">mg</span></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Amino Acid Profile — dark strip -->
+<div class="strip">
+  <div class="strip-inner">
+    <p class="section-tag purple">Amino Acid Profile</p>
+    <h2>Every essential amino acid.<br/>Measured and verified.</h2>
+    <p class="lead">Nine essential amino acids your body cannot synthesize — compared head-to-head against the leading alternatives. Numbers represent grams per 100g of protein.</p>
+
+    <div class="amino-table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Amino Acid</th>
+            <th class="col-crotein">Crotein</th>
+            <th>Whey Isolate</th>
+            <th>Chicken Breast</th>
+            <th>Plant Blend</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Leucine</td>
+            <td class="col-crotein">9.8g</td>
+            <td>9.2g</td>
+            <td>7.8g</td>
+            <td>6.1g</td>
+          </tr>
+          <tr>
+            <td>Isoleucine</td>
+            <td class="col-crotein">5.7g</td>
+            <td>5.4g</td>
+            <td>4.9g</td>
+            <td>3.8g</td>
+          </tr>
+          <tr>
+            <td>Valine</td>
+            <td class="col-crotein">6.1g</td>
+            <td>5.7g</td>
+            <td>4.8g</td>
+            <td>4.3g</td>
+          </tr>
+          <tr>
+            <td>Lysine</td>
+            <td class="col-crotein">8.9g</td>
+            <td>8.3g</td>
+            <td>8.9g</td>
+            <td>5.2g</td>
+          </tr>
+          <tr>
+            <td>Methionine</td>
+            <td class="col-crotein">3.4g</td>
+            <td>2.1g</td>
+            <td>2.6g</td>
+            <td>1.4g</td>
+          </tr>
+          <tr>
+            <td>Phenylalanine</td>
+            <td class="col-crotein">4.8g</td>
+            <td>3.6g</td>
+            <td>3.9g</td>
+            <td>4.0g</td>
+          </tr>
+          <tr>
+            <td>Threonine</td>
+            <td class="col-crotein">5.2g</td>
+            <td>4.8g</td>
+            <td>4.2g</td>
+            <td>3.3g</td>
+          </tr>
+          <tr>
+            <td>Tryptophan</td>
+            <td class="col-crotein">1.8g</td>
+            <td>1.6g</td>
+            <td>1.1g</td>
+            <td>0.9g</td>
+          </tr>
+          <tr>
+            <td>Histidine</td>
+            <td class="col-crotein">3.6g</td>
+            <td>2.9g</td>
+            <td>3.1g</td>
+            <td>2.2g</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="amino-note">* Values represent grams of amino acid per 100g total protein. Crotein figures reflect batch-average third-party lab analysis.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Our Sourcing -->
+<section class="content-section">
+  <p class="section-tag teal">Our Sourcing</p>
+  <h2>American skies.<br/>Rigorous standards.</h2>
+
+  <div class="sourcing-grid">
+    <ul class="sourcing-points">
+      <li>
+        <span class="ico">✦</span>
+        <div>
+          <strong>Free-Range Only</strong>
+          <span>All Crotein source birds are wild-ranging or habitat-managed free-range. No confinement operations. Ever. The crow's lifestyle is the source of its nutritional edge — we protect that.</span>
+        </div>
+      </li>
+      <li>
+        <span class="ico">✦</span>
+        <div>
+          <strong>No Migration Disruption</strong>
+          <span>Harvest occurs strictly outside migratory windows. Our partner farms maintain population health monitoring year-round, in coordination with regional wildlife biologists.</span>
+        </div>
+      </li>
+      <li>
+        <span class="ico">✦</span>
+        <div>
+          <strong>Partner Farms: MT, WY, ND, SD</strong>
+          <span>Crotein sources exclusively from partner facilities in Montana, Wyoming, North Dakota, and South Dakota — states with ideal crow habitat, clean air quality, and cooperative regulatory environments.</span>
+        </div>
+      </li>
+      <li>
+        <span class="ico">✦</span>
+        <div>
+          <strong>Cold-Chain Processed Within 4 Hours</strong>
+          <span>From harvest to cold-press extraction, no more than four hours elapsed. Temperature never exceeds 4°C. Protein integrity is preserved at every stage — no exceptions.</span>
+        </div>
+      </li>
+    </ul>
+
+    <div class="state-map">
+      <div class="map-title">Partner Farm Locations — Northern Plains &amp; Rockies</div>
+      <div class="map-grid">
+        <!-- Row 1: ID | MT | ND | MN | WI -->
+        <div class="map-cell">ID</div>
+        <div class="map-cell partner">MT</div>
+        <div class="map-cell partner">ND</div>
+        <div class="map-cell">MN</div>
+        <div class="map-cell">WI</div>
+        <!-- Row 2: OR | WY | SD | IA | IL -->
+        <div class="map-cell">OR</div>
+        <div class="map-cell partner">WY</div>
+        <div class="map-cell partner">SD</div>
+        <div class="map-cell">IA</div>
+        <div class="map-cell">IL</div>
+        <!-- Row 3: NV | CO | NE | MO | IN -->
+        <div class="map-cell">NV</div>
+        <div class="map-cell">CO</div>
+        <div class="map-cell">NE</div>
+        <div class="map-cell">MO</div>
+        <div class="map-cell">IN</div>
+        <!-- Row 4: CA | UT | KS | AR | OH -->
+        <div class="map-cell">CA</div>
+        <div class="map-cell">UT</div>
+        <div class="map-cell">KS</div>
+        <div class="map-cell">AR</div>
+        <div class="map-cell">OH</div>
+      </div>
+      <div class="map-legend">
+        <div class="map-legend-dot"></div>
+        <span>Active Crotein partner farm location</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Manufacturing Process — dark strip -->
+<div class="strip">
+  <div class="strip-inner">
+    <p class="section-tag gold">The Manufacturing Process</p>
+    <h2>From bird to tin.<br/>Nothing compromised.</h2>
+    <p class="lead">Four steps. Zero shortcuts. Each batch traceable from harvest to shelf.</p>
+
+    <div class="process-steps">
+      <div class="process-step">
+        <div class="process-num">1</div>
+        <div class="process-crow">
+          <svg width="36" height="20" style="color:var(--gold)"><use href="#crow-fly"/></svg>
+        </div>
+        <div class="process-title">Harvest &amp; Cold-Chain</div>
+        <div class="process-desc">Source birds are processed at partner facilities and immediately chilled. Zero to 4°C within 60 minutes of harvest.</div>
+        <div class="process-tag">0–4°C within 4 hrs</div>
+      </div>
+
+      <div class="process-step">
+        <div class="process-num">2</div>
+        <div class="process-crow">
+          <svg width="36" height="20" style="color:var(--teal)"><use href="#crow-fly"/></svg>
+        </div>
+        <div class="process-title">Cold-Press Extraction</div>
+        <div class="process-desc">Protein is extracted via cold-press isolation — never heated above 42°C. Heat denaturing is the enemy of amino acid bioavailability. We reject it entirely.</div>
+        <div class="process-tag">No heat denaturing</div>
+      </div>
+
+      <div class="process-step">
+        <div class="process-num">3</div>
+        <div class="process-crow">
+          <svg width="36" height="20" style="color:var(--purple)"><use href="#crow-fly"/></svg>
+        </div>
+        <div class="process-title">NSF Lab Testing</div>
+        <div class="process-desc">Every batch is submitted to an NSF-accredited independent laboratory for potency verification, heavy metals screening, and banned substance analysis.</div>
+        <div class="process-tag">Every batch, no exceptions</div>
+      </div>
+
+      <div class="process-step">
+        <div class="process-num">4</div>
+        <div class="process-crow">
+          <svg width="36" height="20" style="color:var(--gold-l)"><use href="#crow-fly"/></svg>
+        </div>
+        <div class="process-title">Nitrogen-Sealed Tins</div>
+        <div class="process-desc">Finished protein is nitrogen-flushed and sealed in food-grade steel tins. Oxygen is the enemy of freshness. Nitrogen sealing guarantees an 18-month shelf life.</div>
+        <div class="process-tag">18-month shelf life</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Certifications -->
+<section class="content-section">
+  <p class="section-tag blue">Certifications &amp; Testing</p>
+  <h2>Third-party verified.<br/>No self-grading.</h2>
+  <p class="lead">Any brand can print claims. These certifications mean an independent body has verified them — at our expense, on our demand.</p>
+
+  <div class="certs-grid">
+    <div class="cert-card">
+      <div class="cert-seal">
+        <div class="cert-seal-text">NSF<br/>Certified<br/>for Sport</div>
+      </div>
+      <div class="cert-name">NSF Certified for Sport</div>
+      <div class="cert-desc">The gold standard for athletic supplements. Every Crotein batch is tested for 270+ substances banned by major sports organizations. Compete with absolute confidence.</div>
+    </div>
+
+    <div class="cert-card">
+      <div class="cert-seal">
+        <div class="cert-seal-text">USDA<br/>Process<br/>Verified</div>
+      </div>
+      <div class="cert-name">USDA Process Verified</div>
+      <div class="cert-desc">Our sourcing and processing claims are verified by the USDA Agricultural Marketing Service. "Free-range" and "cold-chain" are not marketing language — they are audited facts.</div>
+    </div>
+
+    <div class="cert-card">
+      <div class="cert-seal">
+        <div class="cert-seal-text">cGMP<br/>Manu&shy;factured</div>
+      </div>
+      <div class="cert-name">cGMP Manufactured</div>
+      <div class="cert-desc">Current Good Manufacturing Practice regulations ensure every facility, process, and personnel standard meets FDA requirements. Our facilities undergo annual unannounced audits.</div>
+    </div>
+  </div>
+</section>
+
+<!-- Perch row -->
+<div class="parade" aria-hidden="true">
+  <svg width="42" height="55" style="color:var(--purple);opacity:0.5"><use href="#crow-perch"/></svg>
+  <svg width="30" height="39" style="color:var(--muted);opacity:0.35"><use href="#crow-perch"/></svg>
+  <svg width="52" height="68" style="color:var(--gold);opacity:0.55"><use href="#crow-perch"/></svg>
+  <svg width="38" height="49" style="color:var(--teal);opacity:0.45"><use href="#crow-perch"/></svg>
+  <svg width="52" height="68" style="color:var(--purple);opacity:0.5"><use href="#crow-perch"/></svg>
+  <svg width="30" height="39" style="color:var(--muted);opacity:0.35"><use href="#crow-perch"/></svg>
+  <svg width="42" height="55" style="color:var(--gold);opacity:0.5"><use href="#crow-perch"/></svg>
+</div>
+
+<!-- FAQ -->
+<section class="content-section">
+  <p class="section-tag gold">Frequently Asked Questions</p>
+  <h2>Answers from the flock.</h2>
+
+  <div class="faq-list">
+    <details>
+      <summary>What does crow protein taste like?</summary>
+      <div class="faq-answer">
+        Crow protein has a clean, subtly gamey profile — closer to duck or dark-meat turkey than chicken breast, but milder than you might expect. In the Original Dark flavor, you'll notice a rich, slightly mineral depth. The Black Honey variant smooths this entirely with raw wildflower honey, while Smoked Salt adds a savory, umami finish that most athletes find pairs exceptionally well with water or black coffee. Overall: far more palatable than most plant proteins, and decidedly less chalky than standard whey.
+      </div>
+    </details>
+
+    <details>
+      <summary>Is it legal to source crow protein in the US?</summary>
+      <div class="faq-answer">
+        A fair and frequently asked question. American crows are protected under the Migratory Bird Treaty Act — however, the Act includes explicit provisions permitting federally licensed commercial harvest under controlled conditions when conducted pursuant to a depredation order or special use permit. Crotein partners exclusively with federally licensed processors operating under MBTA Special Use Permits, renewed annually through the U.S. Fish &amp; Wildlife Service. Every harvest is documented, reported, and fully compliant. We welcome anyone to request a copy of our current permits — just contact us.
+      </div>
+    </details>
+
+    <details>
+      <summary>How is it different from chicken or turkey protein?</summary>
+      <div class="faq-answer">
+        The difference is anatomical and physiological. Commercial poultry (chicken, turkey) are sedentary, selectively bred for rapid weight gain and white-meat dominance. Crows are wild, highly active, migratory birds whose musculature reflects a lifetime of demanding movement. This produces a dramatically different fiber-type distribution — more slow-twitch oxidative tissue, higher iron, superior leucine density, and a complete amino acid profile that outperforms commodity poultry protein on virtually every marker that matters to athletes.
+      </div>
+    </details>
+
+    <details>
+      <summary>Is it safe for people with poultry allergies?</summary>
+      <div class="faq-answer">
+        If you have a diagnosed poultry allergy (specifically to chicken, turkey, or duck proteins), please consult your allergist before trying Crotein. Crow is an avian protein and may share certain allergenic proteins with domestic poultry — specifically alpha-parvalbumin. We do not make any claims of hypoallergenicity for individuals with documented avian protein sensitivity. Your health comes first.
+      </div>
+    </details>
+
+    <details>
+      <summary>How many scoops per day?</summary>
+      <div class="faq-answer">
+        The standard recommendation is one scoop (approximately 100g dry weight) per day, providing 82g of protein. Athletes in active hypertrophy phases or those with elevated protein targets (1.6–2.2g/kg bodyweight) may consume up to two scoops daily. Because of Crotein's exceptionally high protein density per scoop, most users find a single daily serving is sufficient — and considerably more efficient than multiple scoops of conventional protein powder.
+      </div>
+    </details>
+
+    <details>
+      <summary>Is Crotein keto-friendly?</summary>
+      <div class="faq-answer">
+        Yes. Original Dark contains 82g protein, 8g fat, and approximately 10g carbohydrates per 100g serving — well within ketogenic macros for most protocols. The Black Honey and Smoked Salt variants contain trace additional carbohydrates from their respective flavor additions (approximately 12g and 10.5g respectively). All three flavors are compliant with standard ketogenic frameworks (under 20g net carbs per serving).
+      </div>
+    </details>
+
+    <details>
+      <summary>Do you offer a subscription?</summary>
+      <div class="faq-answer">
+        A subscription program is in active development and will launch in Q3. At launch, subscribers will receive 15% off every order, priority access to new flavors, and guaranteed inventory allocation during high-demand periods. <a href="order.html">Order now</a> to join the waitlist — every current customer will be first notified.
+      </div>
+    </details>
+
+    <details>
+      <summary>What is your return policy?</summary>
+      <div class="faq-answer">
+        We offer a 30-day unconditional money-back guarantee on your first tin. If you are not satisfied for any reason — taste, texture, results, or simply a change of mind — contact us within 30 days of delivery and we will refund your purchase in full, no questions asked. Multi-tin orders (The Murder Pack, The Unkindness) are covered for the first tin under this guarantee; remaining tins may be returned unopened for store credit within 30 days.
+      </div>
+    </details>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-section">
+  <p class="section-tag teal" style="display:block;text-align:center;margin-bottom:0.8rem;">Join 50,000 Athletes</p>
+  <h2>Ready to take flight?</h2>
+  <p class="lead">Order Crotein now and join 50,000 athletes who answered the call. Ancient protein. Modern results. No substitutes.</p>
+  <a class="btn-primary" href="order.html">Order Crotein Now</a>
+  <p class="cta-note">Free shipping on orders over $99 &nbsp;·&nbsp; 30-day money-back guarantee &nbsp;·&nbsp; Veteran discount available</p>
+</div>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-brand">
+    <svg width="28" height="15" style="color:var(--gold);opacity:0.6"><use href="#crow-fly"/></svg>
+    <div class="footer-logo">Crotein</div>
+  </div>
+  <ul class="footer-links">
+    <li><a href="#">Privacy Policy</a></li>
+    <li><a href="#">Terms of Use</a></li>
+    <li><a href="#">Contact</a></li>
+    <li><a href="#">Store Locator</a></li>
+  </ul>
+  <div class="footer-copy">© MMXXIV Crotein LLC &nbsp;·&nbsp; A MAHA Health Brand &nbsp;·&nbsp; Made in the USA</div>
+</footer>
+
+</body>
+</html>

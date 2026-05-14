@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Order — Crotein</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink:     #05080f;
+      --dark:    #090d1c;
+      --card:    #0e1228;
+      --border:  #1e2a50;
+      --gold:    #d4920c;
+      --gold-l:  #f0b030;
+      --purple:  #8b50f0;
+      --teal:    #0fb8a0;
+      --blue:    #3a78e8;
+      --cream:   #f2e6cc;
+      --parch:   #c4ab80;
+      --muted:   #7080a8;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Palatino Linotype', Palatino, 'Book Antiqua', Georgia, serif;
+      background: var(--ink);
+      color: var(--cream);
+      line-height: 1.65;
+      overflow-x: hidden;
+    }
+
+    /* ── Nav ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 2rem;
+      background: rgba(5, 8, 15, 0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      font-size: 1.5rem; font-weight: 700; letter-spacing: 0.2em;
+      color: var(--gold-l); text-decoration: none; font-variant: small-caps;
+    }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a {
+      color: var(--muted); text-decoration: none; font-size: 0.88rem;
+      letter-spacing: 0.1em; font-variant: small-caps; transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--gold-l); }
+    .nav-cta {
+      background: var(--gold); color: var(--ink);
+      padding: 0.5rem 1.3rem; border-radius: 2px;
+      font-weight: 700; font-size: 0.82rem; letter-spacing: 0.12em;
+      font-variant: small-caps; text-decoration: none;
+      border: 1px solid var(--gold-l); transition: background 0.2s;
+    }
+    .nav-cta:hover { background: var(--gold-l); }
+
+    /* ── Hero ── */
+    .hero {
+      padding: 9rem 2rem 5rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 70% 60% at 50% 40%, rgba(212,146,12,0.06) 0%, transparent 65%),
+        radial-gradient(ellipse 50% 40% at 20% 70%, rgba(139,80,240,0.05) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 40% at 80% 70%, rgba(15,184,160,0.04) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .hero-rule {
+      width: 180px; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      margin: 0 auto 1.5rem;
+    }
+    .hero-badge {
+      font-size: 0.68rem; letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 1rem;
+      font-family: 'Courier New', monospace;
+    }
+    .hero h1 {
+      font-size: clamp(2.8rem, 7vw, 5rem);
+      font-weight: 700; letter-spacing: 0.05em; line-height: 1;
+      font-variant: small-caps;
+      background: linear-gradient(140deg, var(--cream) 0%, var(--gold-l) 50%, var(--gold) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text; margin-bottom: 0.8rem;
+    }
+    .hero-tagline {
+      font-size: 1rem; color: var(--parch);
+      letter-spacing: 0.15em; font-style: italic; margin-bottom: 1.8rem;
+    }
+    .hero-bird-row {
+      display: flex; align-items: flex-end; justify-content: center;
+      gap: 0.8rem; opacity: 0.6; margin-bottom: 0.5rem;
+    }
+
+    /* ── Section shared ── */
+    .section-tag {
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.3em; text-transform: uppercase;
+      margin-bottom: 0.8rem; font-family: 'Courier New', monospace;
+    }
+    .section-tag.gold   { color: var(--gold); }
+    .section-tag.teal   { color: var(--teal); }
+    .section-tag.purple { color: var(--purple); }
+
+    h2 {
+      font-size: clamp(1.6rem, 4vw, 2.4rem); font-weight: 700;
+      line-height: 1.15; margin-bottom: 1rem;
+      font-variant: small-caps; letter-spacing: 0.05em; color: var(--cream);
+    }
+
+    /* ── Order body wrapper ── */
+    .order-body {
+      max-width: 1100px; margin: 0 auto; padding: 0 2rem 6rem;
+    }
+
+    /* ── Step header ── */
+    .step-header {
+      display: flex; align-items: center; gap: 1rem;
+      margin-bottom: 1.5rem; margin-top: 3.5rem;
+    }
+    .step-num {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: var(--gold); color: var(--ink);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 0.9rem; flex-shrink: 0;
+    }
+    .step-header h2 {
+      margin-bottom: 0; font-size: 1.3rem;
+    }
+
+    /* ── Package cards ── */
+    .package-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem;
+    }
+    .package-card {
+      position: relative; background: var(--card);
+      border: 2px solid var(--border); border-radius: 3px;
+      padding: 1.8rem 1.5rem; cursor: pointer;
+      transition: border-color 0.2s, transform 0.15s, box-shadow 0.2s;
+    }
+    .package-card:hover {
+      transform: translateY(-3px);
+    }
+    .package-card input[type="radio"] {
+      position: absolute; opacity: 0; width: 0; height: 0;
+    }
+    .package-card.selected-gold  { border-color: var(--gold);   box-shadow: 0 0 24px rgba(212,146,12,0.2); }
+    .package-card.selected-purple{ border-color: var(--purple); box-shadow: 0 0 24px rgba(139,80,240,0.2); }
+    .package-card.selected-teal  { border-color: var(--teal);   box-shadow: 0 0 24px rgba(15,184,160,0.2); }
+
+    .pkg-badge {
+      position: absolute; top: -1px; right: 1.2rem;
+      font-size: 0.6rem; font-weight: 700; letter-spacing: 0.18em;
+      text-transform: uppercase; padding: 0.25rem 0.65rem;
+      font-family: 'Courier New', monospace; border-radius: 0 0 3px 3px;
+    }
+    .pkg-badge.purple { background: var(--purple); color: #fff; }
+    .pkg-badge.teal   { background: var(--teal);   color: var(--ink); }
+
+    .pkg-radio-dot {
+      width: 18px; height: 18px; border-radius: 50%;
+      border: 2px solid var(--border); margin-bottom: 1.2rem;
+      transition: border-color 0.2s, background 0.2s;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .package-card.selected-gold   .pkg-radio-dot { border-color: var(--gold);   background: var(--gold);   }
+    .package-card.selected-purple .pkg-radio-dot { border-color: var(--purple); background: var(--purple); }
+    .package-card.selected-teal   .pkg-radio-dot { border-color: var(--teal);   background: var(--teal);   }
+    .pkg-radio-dot::after {
+      content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--ink); display: none;
+    }
+    .package-card.selected-gold   .pkg-radio-dot::after,
+    .package-card.selected-purple .pkg-radio-dot::after,
+    .package-card.selected-teal   .pkg-radio-dot::after { display: block; }
+
+    .pkg-name {
+      font-size: 1rem; font-weight: 700; font-variant: small-caps;
+      letter-spacing: 0.08em; margin-bottom: 0.25rem;
+    }
+    .package-card.selected-gold   .pkg-name { color: var(--gold-l); }
+    .package-card.selected-purple .pkg-name { color: var(--purple); }
+    .package-card.selected-teal   .pkg-name { color: var(--teal); }
+
+    .pkg-sub  { font-size: 0.78rem; color: var(--muted); font-style: italic; margin-bottom: 1rem; }
+    .pkg-price {
+      font-size: 2.2rem; font-weight: 700; line-height: 1; margin-bottom: 0.2rem; color: var(--cream);
+    }
+    .pkg-price span { font-size: 1.1rem; color: var(--muted); }
+    .pkg-servings { font-size: 0.75rem; color: var(--muted); font-family: 'Courier New', monospace; margin-bottom: 0.8rem; }
+    .pkg-save {
+      font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; font-family: 'Courier New', monospace;
+    }
+    .pkg-save.purple { color: var(--purple); }
+    .pkg-save.teal   { color: var(--teal); }
+    .pkg-desc { font-size: 0.8rem; color: var(--muted); font-style: italic; margin-top: 0.6rem; }
+
+    /* ── Flavor pills ── */
+    .flavor-row { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .flavor-pill {
+      position: relative; cursor: pointer;
+      border: 2px solid var(--border); border-radius: 40px;
+      padding: 0.65rem 1.5rem; transition: border-color 0.2s, background 0.2s;
+      background: var(--card);
+    }
+    .flavor-pill input[type="radio"] { position: absolute; opacity: 0; width: 0; height: 0; }
+    .flavor-pill.selected { border-color: var(--gold); background: rgba(212,146,12,0.08); }
+    .flavor-name {
+      font-size: 0.9rem; font-weight: 700; font-variant: small-caps;
+      letter-spacing: 0.08em; color: var(--cream); display: block;
+      transition: color 0.2s;
+    }
+    .flavor-pill.selected .flavor-name { color: var(--gold-l); }
+    .flavor-note { font-size: 0.72rem; color: var(--muted); font-style: italic; display: block; }
+
+    /* ── Divider ── */
+    .section-rule {
+      height: 1px; border: none;
+      background: linear-gradient(90deg, transparent, var(--border), transparent);
+      margin: 3rem 0;
+    }
+
+    /* ── Order form layout ── */
+    .order-columns {
+      display: grid; grid-template-columns: 360px 1fr; gap: 3rem; align-items: start;
+    }
+
+    /* ── Summary sidebar ── */
+    .order-summary {
+      position: sticky; top: 5rem;
+      background: var(--card); border: 1px solid var(--border);
+      border-top: 2px solid var(--gold); border-radius: 2px;
+      padding: 1.8rem;
+    }
+    .summary-title {
+      font-size: 0.7rem; letter-spacing: 0.25em; text-transform: uppercase;
+      color: var(--muted); font-family: 'Courier New', monospace; margin-bottom: 1.4rem;
+    }
+    .summary-row {
+      display: flex; justify-content: space-between; align-items: baseline;
+      font-size: 0.85rem; padding: 0.55rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .summary-row:last-of-type { border-bottom: none; }
+    .summary-label { color: var(--muted); }
+    .summary-value { color: var(--cream); font-weight: 700; }
+    .summary-value.gold { color: var(--gold-l); }
+    .summary-total {
+      display: flex; justify-content: space-between; align-items: baseline;
+      margin-top: 1.2rem; padding-top: 1rem;
+      border-top: 1px solid var(--border);
+    }
+    .summary-total .label { font-size: 0.8rem; font-variant: small-caps; letter-spacing: 0.1em; color: var(--cream); }
+    .summary-total .amount { font-size: 1.8rem; font-weight: 700; color: var(--gold-l); }
+    .summary-shipping-note {
+      font-size: 0.68rem; color: var(--teal); font-style: italic;
+      text-align: right; margin-top: 0.4rem; font-family: 'Courier New', monospace;
+    }
+
+    /* ── Form ── */
+    .form-section-title {
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.28em; text-transform: uppercase;
+      color: var(--gold); font-family: 'Courier New', monospace;
+      margin-bottom: 1.2rem; margin-top: 2rem;
+    }
+    .form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .form-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+    .form-field { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 1rem; }
+    .form-field label {
+      font-size: 0.72rem; letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--muted); font-family: 'Courier New', monospace;
+    }
+    .form-field input {
+      background: var(--dark); border: 1px solid var(--border); border-radius: 2px;
+      padding: 0.7rem 0.9rem; color: var(--cream);
+      font-family: 'Palatino Linotype', Palatino, 'Book Antiqua', Georgia, serif;
+      font-size: 0.9rem; outline: none; transition: border-color 0.2s, box-shadow 0.2s;
+      width: 100%;
+    }
+    .form-field input:focus {
+      border-color: var(--gold); box-shadow: 0 0 0 2px rgba(212,146,12,0.15);
+    }
+    .form-field input.error {
+      border-color: #e04040; box-shadow: 0 0 0 2px rgba(224,64,64,0.18);
+    }
+    .form-field input::placeholder { color: var(--border); }
+
+    .payment-card-row { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 1rem; }
+
+    /* ── Submit ── */
+    .btn-order {
+      display: block; width: 100%; margin-top: 1.8rem;
+      background: var(--gold); color: var(--ink);
+      padding: 1.1rem 2rem; border: 1px solid var(--gold-l); border-radius: 2px;
+      font-family: 'Palatino Linotype', Palatino, 'Book Antiqua', Georgia, serif;
+      font-size: 1rem; font-weight: 700; letter-spacing: 0.18em; font-variant: small-caps;
+      cursor: pointer; transition: background 0.2s, box-shadow 0.2s;
+      box-shadow: 0 0 20px rgba(212,146,12,0.25);
+    }
+    .btn-order:hover { background: var(--gold-l); box-shadow: 0 0 40px rgba(212,146,12,0.45); }
+
+    /* ── Trust bar ── */
+    .trust-bar {
+      background: var(--dark); border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border); padding: 1.4rem 2rem;
+      margin-top: 4rem;
+    }
+    .trust-inner {
+      max-width: 1100px; margin: 0 auto;
+      display: flex; justify-content: center; flex-wrap: wrap; gap: 2.5rem;
+    }
+    .trust-item {
+      display: flex; align-items: center; gap: 0.6rem;
+      font-size: 0.75rem; color: var(--muted); font-style: italic;
+    }
+    .trust-icon {
+      font-size: 1rem; flex-shrink: 0;
+    }
+
+    /* ── Footer ── */
+    footer {
+      border-top: 1px solid var(--border); padding: 3rem 2rem;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 1.5rem; max-width: 1100px; margin: 0 auto;
+    }
+    .footer-brand { display: flex; align-items: center; gap: 0.8rem; }
+    .footer-logo { font-size: 1.2rem; font-weight: 700; color: var(--gold-l); letter-spacing: 0.2em; font-variant: small-caps; }
+    .footer-links { display: flex; gap: 2rem; list-style: none; }
+    .footer-links a { color: var(--muted); text-decoration: none; font-size: 0.8rem; transition: color 0.2s; font-style: italic; }
+    .footer-links a:hover { color: var(--gold-l); }
+    .footer-copy { font-size: 0.7rem; color: var(--muted); font-family: 'Courier New', monospace; }
+
+    /* ── Success overlay ── */
+    .success-overlay {
+      display: none;
+      position: fixed; inset: 0; z-index: 200;
+      background: var(--ink);
+      align-items: center; justify-content: center;
+      text-align: center; padding: 2rem;
+      flex-direction: column; gap: 1.5rem;
+    }
+    .success-overlay.visible { display: flex; }
+    .success-check {
+      width: 90px; height: 90px; border-radius: 50%;
+      background: rgba(15,184,160,0.1); border: 2px solid var(--teal);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2.5rem; color: var(--teal);
+      box-shadow: 0 0 40px rgba(15,184,160,0.25);
+    }
+    .success-overlay h2 {
+      font-size: 2.5rem; color: var(--gold-l); margin-bottom: 0.3rem;
+    }
+    .success-order-num {
+      font-size: 0.72rem; letter-spacing: 0.25em; color: var(--muted);
+      font-family: 'Courier New', monospace; text-transform: uppercase;
+    }
+    .success-msg { font-size: 1rem; color: var(--parch); font-style: italic; max-width: 380px; }
+    .success-crows {
+      display: flex; gap: 1rem; justify-content: center; opacity: 0.5;
+    }
+    .btn-ghost {
+      background: transparent; color: var(--cream);
+      padding: 0.9rem 2.5rem; border-radius: 2px;
+      font-weight: 700; font-size: 0.9rem; letter-spacing: 0.15em; font-variant: small-caps;
+      text-decoration: none; border: 1px solid var(--border);
+      transition: border-color 0.2s, color 0.2s;
+      display: inline-block;
+    }
+    .btn-ghost:hover { border-color: var(--teal); color: var(--teal); }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .package-grid { grid-template-columns: 1fr; }
+      .order-columns { grid-template-columns: 1fr; }
+      .order-summary { position: static; }
+      .form-grid-2 { grid-template-columns: 1fr; }
+      .form-grid-3 { grid-template-columns: 1fr; }
+      .payment-card-row { grid-template-columns: 1fr; }
+      footer { flex-direction: column; align-items: flex-start; }
+      .trust-inner { gap: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="crow-fly" viewBox="0 0 200 110">
+    <ellipse cx="60" cy="28" rx="15" ry="13" fill="currentColor"/>
+    <path d="M 46,23 L 28,20 L 46,31Z" fill="currentColor"/>
+    <path d="M 68,34 C 80,34 100,36 118,36 C 118,50 110,62 100,66 C 90,62 80,58 74,50 C 68,44 66,38 68,34Z" fill="currentColor"/>
+    <path d="M 80,38 C 65,32 44,22 14,18 L 18,34 C 42,36 64,42 78,48Z" fill="currentColor"/>
+    <path d="M 14,18 C  8,26  6,34 10,38 C 11,30 11,22 14,18Z" fill="currentColor"/>
+    <path d="M 22,15 C 15,23 13,31 17,36 C 18,28 18,20 22,15Z" fill="currentColor"/>
+    <path d="M 31,13 C 24,21 22,30 26,35 C 27,27 28,18 31,13Z" fill="currentColor"/>
+    <path d="M 42,12 C 34,20 32,28 37,34 C 38,26 39,17 42,12Z" fill="currentColor"/>
+    <path d="M 116,38 C 131,32 152,22 182,18 L 178,34 C 154,36 132,42 118,48Z" fill="currentColor"/>
+    <path d="M 182,18 C 188,26 190,34 186,38 C 185,30 185,22 182,18Z" fill="currentColor"/>
+    <path d="M 174,15 C 181,23 183,31 179,36 C 178,28 178,20 174,15Z" fill="currentColor"/>
+    <path d="M 165,13 C 172,21 174,30 170,35 C 169,27 168,18 165,13Z" fill="currentColor"/>
+    <path d="M 154,12 C 162,20 164,28 159,34 C 158,26 157,17 154,12Z" fill="currentColor"/>
+    <path d="M  92,65 L  84,88 L  90,68Z" fill="currentColor"/>
+    <path d="M  96,66 L  91,92 L  96,68Z" fill="currentColor"/>
+    <path d="M 100,67 L  98,94 L 100,69Z" fill="currentColor"/>
+    <path d="M 104,66 L 109,92 L 104,68Z" fill="currentColor"/>
+    <path d="M 108,65 L 116,88 L 110,68Z" fill="currentColor"/>
+  </symbol>
+  <symbol id="crow-perch" viewBox="0 0 100 130">
+    <path d="M 62,75 C 70,85 78,100 75,112 C 68,98 65,88 60,78Z" fill="currentColor"/>
+    <path d="M 60,77 C 65,90 68,106 64,116 C 58,102 57,90 58,80Z" fill="currentColor"/>
+    <path d="M 58,78 C 60,92 60,108 56,118 C 52,104 53,92 54,80Z" fill="currentColor"/>
+    <ellipse cx="52" cy="70" rx="22" ry="28" fill="currentColor"/>
+    <path d="M 40,50 C 35,44 32,38 34,32 C 38,26 46,24 52,26 C 46,28 40,34 40,50Z" fill="currentColor"/>
+    <ellipse cx="44" cy="22" rx="18" ry="16" fill="currentColor"/>
+    <path d="M 28,18 L 10,14 L 10,20 L 28,24Z" fill="currentColor"/>
+    <path d="M 44,95 L 38,115 M 38,115 L 30,118 M 38,115 L 32,112" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <path d="M 58,95 L 52,115 M 52,115 L 44,118 M 52,115 L 46,112" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  </symbol>
+</svg>
+
+<!-- Success Overlay -->
+<div class="success-overlay" id="successOverlay">
+  <div class="success-check">&#10003;</div>
+  <h2>Order Confirmed!</h2>
+  <div class="success-order-num" id="successOrderNum">Order #000000</div>
+  <p class="success-msg">Your Crotein ships within 2 business days. Look to the sky — your flock is on its way.</p>
+  <div class="success-crows" aria-hidden="true">
+    <svg width="44" height="24" style="color:var(--gold)"><use href="#crow-fly"/></svg>
+    <svg width="30" height="16" style="color:var(--teal)"><use href="#crow-fly"/></svg>
+    <svg width="52" height="29" style="color:var(--purple)"><use href="#crow-fly"/></svg>
+    <svg width="30" height="16" style="color:var(--teal)"><use href="#crow-fly"/></svg>
+    <svg width="44" height="24" style="color:var(--gold)"><use href="#crow-fly"/></svg>
+  </div>
+  <a class="btn-ghost" href="index.html">Return to Homepage</a>
+</div>
+
+<!-- Nav -->
+<nav>
+  <a class="nav-logo" href="index.html">✦ Crotein</a>
+  <ul class="nav-links">
+    <li><a href="learn-more.html">The Product</a></li>
+    <li><a href="index.html#benefits">Benefits</a></li>
+    <li><a href="index.html#macros">Nutrition</a></li>
+    <li><a href="index.html#testimonials">Testimonials</a></li>
+  </ul>
+  <a class="nav-cta" href="order.html">Order Now</a>
+</nav>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="hero-rule"></div>
+  <p class="hero-badge">Secure Checkout &nbsp;·&nbsp; 256-bit SSL &nbsp;·&nbsp; 30-Day Guarantee</p>
+  <h1>Begin Your Order</h1>
+  <p class="hero-tagline">One tin. One oath.</p>
+  <div class="hero-bird-row" aria-hidden="true">
+    <svg width="34" height="19" style="color:var(--purple);transform:translateY(-3px)"><use href="#crow-fly"/></svg>
+    <svg width="22" height="12" style="color:var(--gold)"><use href="#crow-fly"/></svg>
+    <svg width="50" height="28" style="color:var(--teal)"><use href="#crow-fly"/></svg>
+    <svg width="50" height="28" style="color:var(--gold)"><use href="#crow-fly"/></svg>
+    <svg width="22" height="12" style="color:var(--purple)"><use href="#crow-fly"/></svg>
+    <svg width="38" height="21" style="color:var(--teal);transform:translateY(-5px)"><use href="#crow-fly"/></svg>
+  </div>
+</div>
+
+<!-- Order Body -->
+<div class="order-body">
+
+  <!-- Step 1: Package -->
+  <div class="step-header">
+    <div class="step-num">1</div>
+    <h2>Choose Your Package</h2>
+  </div>
+
+  <div class="package-grid" id="packageGrid">
+
+    <label class="package-card selected-gold" id="pkg-single">
+      <input type="radio" name="package" value="single" data-price="49" data-label="Single Tin" checked>
+      <div class="pkg-radio-dot"></div>
+      <div class="pkg-name">Single Tin</div>
+      <div class="pkg-sub">Your first taste of the ancient edge.</div>
+      <div class="pkg-price">$49<span></span></div>
+      <div class="pkg-servings">30 servings · $1.63 / serving</div>
+      <div class="pkg-desc">Start your journey. No commitment — just results.</div>
+    </label>
+
+    <label class="package-card" id="pkg-murder">
+      <div class="pkg-badge purple">Most Popular</div>
+      <input type="radio" name="package" value="murder" data-price="129" data-label="The Murder Pack (3 tins)">
+      <div class="pkg-radio-dot"></div>
+      <div class="pkg-name" style="color:var(--muted)">The Murder Pack</div>
+      <div class="pkg-sub">Three tins. A murder of savings.</div>
+      <div class="pkg-price">$129<span></span></div>
+      <div class="pkg-servings">90 servings · $1.43 / serving</div>
+      <div class="pkg-save purple">Save $18 vs. single</div>
+      <div class="pkg-desc">The choice of serious athletes who fly with the flock.</div>
+    </label>
+
+    <label class="package-card" id="pkg-unkindness">
+      <div class="pkg-badge teal">Best Value</div>
+      <input type="radio" name="package" value="unkindness" data-price="249" data-label="The Unkindness (6 tins)">
+      <div class="pkg-radio-dot"></div>
+      <div class="pkg-name" style="color:var(--muted)">The Unkindness</div>
+      <div class="pkg-sub">Six tins. Full commitment.</div>
+      <div class="pkg-price">$249<span></span></div>
+      <div class="pkg-servings">180 servings · $1.38 / serving</div>
+      <div class="pkg-save teal">Save $45 vs. single</div>
+      <div class="pkg-desc">For those who have sworn the oath and never look back.</div>
+    </label>
+
+  </div>
+
+  <hr class="section-rule">
+
+  <!-- Step 2: Flavor -->
+  <div class="step-header">
+    <div class="step-num">2</div>
+    <h2>Choose Your Flavor</h2>
+  </div>
+
+  <div class="flavor-row" id="flavorRow">
+    <label class="flavor-pill selected" id="flavor-original">
+      <input type="radio" name="flavor" value="original" data-label="Original Dark" checked>
+      <span class="flavor-name">Original Dark</span>
+      <span class="flavor-note">No flavoring added</span>
+    </label>
+    <label class="flavor-pill" id="flavor-honey">
+      <input type="radio" name="flavor" value="honey" data-label="Black Honey">
+      <span class="flavor-name">Black Honey</span>
+      <span class="flavor-note">Raw wildflower honey</span>
+    </label>
+    <label class="flavor-pill" id="flavor-salt">
+      <input type="radio" name="flavor" value="salt" data-label="Smoked Salt">
+      <span class="flavor-name">Smoked Salt</span>
+      <span class="flavor-note">Himalayan pink salt finish</span>
+    </label>
+  </div>
+
+  <hr class="section-rule">
+
+  <!-- Step 3: Form -->
+  <div class="step-header">
+    <div class="step-num">3</div>
+    <h2>Your Information</h2>
+  </div>
+
+  <div class="order-columns">
+
+    <!-- Summary Sidebar -->
+    <div class="order-summary" id="orderSummary">
+      <div class="summary-title">Order Summary</div>
+      <div class="summary-row">
+        <span class="summary-label">Package</span>
+        <span class="summary-value" id="sumPackage">Single Tin</span>
+      </div>
+      <div class="summary-row">
+        <span class="summary-label">Flavor</span>
+        <span class="summary-value" id="sumFlavor">Original Dark</span>
+      </div>
+      <div class="summary-row">
+        <span class="summary-label">Subtotal</span>
+        <span class="summary-value gold" id="sumSubtotal">$49.00</span>
+      </div>
+      <div class="summary-row">
+        <span class="summary-label">Shipping</span>
+        <span class="summary-value" id="sumShipping">$8.99</span>
+      </div>
+      <div class="summary-total">
+        <span class="label">Total</span>
+        <span class="amount" id="sumTotal">$57.99</span>
+      </div>
+      <div class="summary-shipping-note" id="shippingNote">Add $50 more for free shipping</div>
+    </div>
+
+    <!-- Form -->
+    <form id="orderForm" novalidate>
+
+      <div class="form-section-title">Shipping Information</div>
+
+      <div class="form-grid-2">
+        <div class="form-field">
+          <label for="fullName">Full Name</label>
+          <input type="text" id="fullName" name="fullName" placeholder="John Blackwing" required>
+        </div>
+        <div class="form-field">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" name="email" placeholder="john@example.com" required>
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label for="phone">Phone Number</label>
+        <input type="tel" id="phone" name="phone" placeholder="(555) 000-0000" required>
+      </div>
+
+      <div class="form-field">
+        <label for="address1">Address Line 1</label>
+        <input type="text" id="address1" name="address1" placeholder="123 Raven Ridge Rd" required>
+      </div>
+
+      <div class="form-field">
+        <label for="address2">Address Line 2 <span style="color:var(--muted);font-style:italic">(optional)</span></label>
+        <input type="text" id="address2" name="address2" placeholder="Apt, Suite, Unit...">
+      </div>
+
+      <div class="form-grid-3">
+        <div class="form-field">
+          <label for="city">City</label>
+          <input type="text" id="city" name="city" placeholder="Billings" required>
+        </div>
+        <div class="form-field">
+          <label for="state">State</label>
+          <input type="text" id="state" name="state" placeholder="MT" maxlength="2" required>
+        </div>
+        <div class="form-field">
+          <label for="zip">ZIP Code</label>
+          <input type="text" id="zip" name="zip" placeholder="59101" maxlength="10" required>
+        </div>
+      </div>
+
+      <div class="form-section-title">Payment Details</div>
+
+      <div class="form-field">
+        <label for="cardNumber">Card Number</label>
+        <input type="text" id="cardNumber" name="cardNumber" placeholder="4242 4242 4242 4242" maxlength="19" required>
+      </div>
+
+      <div class="payment-card-row">
+        <div class="form-field">
+          <label for="expiry">Expiry Date</label>
+          <input type="text" id="expiry" name="expiry" placeholder="MM / YY" maxlength="7" required>
+        </div>
+        <div class="form-field">
+          <label for="cvv">CVV</label>
+          <input type="text" id="cvv" name="cvv" placeholder="123" maxlength="4" required>
+        </div>
+        <div class="form-field">
+          <label for="nameOnCard">Name on Card</label>
+          <input type="text" id="nameOnCard" name="nameOnCard" placeholder="J. Blackwing" required>
+        </div>
+      </div>
+
+      <button type="submit" class="btn-order">
+        ✦ Place Order ✦
+      </button>
+
+      <p style="font-size:0.68rem;color:var(--muted);text-align:center;margin-top:1rem;font-style:italic;font-family:'Courier New',monospace;">
+        256-bit SSL encrypted · Your information is never shared
+      </p>
+
+    </form>
+  </div>
+
+</div>
+
+<!-- Trust Bar -->
+<div class="trust-bar">
+  <div class="trust-inner">
+    <div class="trust-item">
+      <span class="trust-icon">🔒</span>
+      <span>256-bit SSL Encrypted</span>
+    </div>
+    <div class="trust-item">
+      <span class="trust-icon">↩</span>
+      <span>30-Day Money Back</span>
+    </div>
+    <div class="trust-item">
+      <span class="trust-icon">✈</span>
+      <span>Free Shipping $99+</span>
+    </div>
+    <div class="trust-item">
+      <span class="trust-icon">✦</span>
+      <span>NSF Certified</span>
+    </div>
+    <div class="trust-item">
+      <span class="trust-icon">★</span>
+      <span>Veteran Discount Available</span>
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-brand">
+    <svg width="28" height="15" style="color:var(--gold);opacity:0.6"><use href="#crow-fly"/></svg>
+    <div class="footer-logo">Crotein</div>
+  </div>
+  <ul class="footer-links">
+    <li><a href="#">Privacy Policy</a></li>
+    <li><a href="#">Terms of Use</a></li>
+    <li><a href="#">Contact</a></li>
+    <li><a href="#">Store Locator</a></li>
+  </ul>
+  <div class="footer-copy">© MMXXIV Crotein LLC &nbsp;·&nbsp; A MAHA Health Brand &nbsp;·&nbsp; Made in the USA</div>
+</footer>
+
+<script>
+  // ── Package selection ──
+  const pkgCards = {
+    single:      document.getElementById('pkg-single'),
+    murder:      document.getElementById('pkg-murder'),
+    unkindness:  document.getElementById('pkg-unkindness'),
+  };
+  const pkgClasses = {
+    single:     'selected-gold',
+    murder:     'selected-purple',
+    unkindness: 'selected-teal',
+  };
+  const pkgNameColors = {
+    single:     'var(--gold-l)',
+    murder:     'var(--purple)',
+    unkindness: 'var(--teal)',
+  };
+
+  function selectPackage(val) {
+    Object.entries(pkgCards).forEach(([k, el]) => {
+      el.classList.remove('selected-gold', 'selected-purple', 'selected-teal');
+      el.querySelector('.pkg-name').style.color = 'var(--muted)';
+    });
+    pkgCards[val].classList.add(pkgClasses[val]);
+    pkgCards[val].querySelector('.pkg-name').style.color = pkgNameColors[val];
+    updateSummary();
+  }
+
+  document.querySelectorAll('input[name="package"]').forEach(radio => {
+    radio.addEventListener('change', () => selectPackage(radio.value));
+  });
+  // Initialize
+  selectPackage('single');
+
+  // ── Flavor selection ──
+  const flavorPills = {
+    original: document.getElementById('flavor-original'),
+    honey:    document.getElementById('flavor-honey'),
+    salt:     document.getElementById('flavor-salt'),
+  };
+
+  document.querySelectorAll('input[name="flavor"]').forEach(radio => {
+    radio.addEventListener('change', () => {
+      Object.values(flavorPills).forEach(el => el.classList.remove('selected'));
+      flavorPills[radio.value].classList.add('selected');
+      updateSummary();
+    });
+  });
+
+  // ── Summary update ──
+  function getSelected(name) {
+    return document.querySelector(`input[name="${name}"]:checked`);
+  }
+
+  function updateSummary() {
+    const pkg = getSelected('package');
+    const flv = getSelected('flavor');
+    const price = pkg ? parseInt(pkg.dataset.price, 10) : 49;
+    const shipping = price >= 99 ? 0 : 8.99;
+    const total = price + shipping;
+
+    document.getElementById('sumPackage').textContent = pkg ? pkg.dataset.label : '—';
+    document.getElementById('sumFlavor').textContent  = flv ? flv.dataset.label : '—';
+    document.getElementById('sumSubtotal').textContent = '$' + price.toFixed(2);
+    document.getElementById('sumShipping').textContent = shipping === 0 ? 'FREE' : '$' + shipping.toFixed(2);
+    document.getElementById('sumTotal').textContent    = '$' + total.toFixed(2);
+
+    const note = document.getElementById('shippingNote');
+    if (shipping === 0) {
+      note.textContent = 'Free shipping applied!';
+      note.style.color = 'var(--teal)';
+    } else {
+      const need = 99 - price;
+      note.textContent = 'Add The Murder Pack for free shipping';
+      note.style.color = 'var(--muted)';
+    }
+  }
+
+  // ── Form validation & submission ──
+  const requiredFields = [
+    'fullName', 'email', 'phone', 'address1', 'city', 'state', 'zip',
+    'cardNumber', 'expiry', 'cvv', 'nameOnCard'
+  ];
+
+  document.getElementById('orderForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    let valid = true;
+
+    requiredFields.forEach(id => {
+      const field = document.getElementById(id);
+      if (!field.value.trim()) {
+        field.classList.add('error');
+        valid = false;
+      } else {
+        field.classList.remove('error');
+      }
+    });
+
+    // Remove error on input
+    requiredFields.forEach(id => {
+      document.getElementById(id).addEventListener('input', function() {
+        this.classList.remove('error');
+      }, { once: false });
+    });
+
+    if (valid) {
+      const orderNum = String(Math.floor(100000 + Math.random() * 900000));
+      document.getElementById('successOrderNum').textContent = 'Order #' + orderNum;
+      document.getElementById('successOverlay').classList.add('visible');
+      window.scrollTo(0, 0);
+    }
+  });
+
+  // Re-attach input listeners for error clearing (persistent)
+  requiredFields.forEach(id => {
+    document.getElementById(id).addEventListener('input', function() {
+      this.classList.remove('error');
+    });
+  });
+
+  // Card number formatting
+  document.getElementById('cardNumber').addEventListener('input', function() {
+    let val = this.value.replace(/\D/g, '').slice(0, 16);
+    this.value = val.replace(/(.{4})/g, '$1 ').trim();
+  });
+
+  // Expiry formatting
+  document.getElementById('expiry').addEventListener('input', function() {
+    let val = this.value.replace(/\D/g, '').slice(0, 4);
+    if (val.length >= 3) val = val.slice(0,2) + ' / ' + val.slice(2);
+    this.value = val;
+  });
+</script>
+</body>
+</html>
