@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CROTEIN — Fuel the Real You</title>
+  <style>
+    /* ── Reset & Base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green:   #3dffa0;
+      --green-d: #1aba6e;
+      --black:   #080b0a;
+      --dark:    #0f1410;
+      --card:    #141a16;
+      --border:  #1e2b22;
+      --white:   #f0f5f1;
+      --muted:   #7a9080;
+      --red:     #e84040;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--black);
+      color: var(--white);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ── Nav ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 2rem;
+      background: rgba(8, 11, 10, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-size: 1.5rem; font-weight: 900; letter-spacing: 0.15em;
+      color: var(--green); text-decoration: none;
+    }
+
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+
+    .nav-links a {
+      color: var(--muted); text-decoration: none; font-size: 0.9rem;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--green); }
+
+    .nav-cta {
+      background: var(--green); color: var(--black);
+      padding: 0.55rem 1.4rem; border-radius: 4px;
+      font-weight: 700; font-size: 0.85rem; letter-spacing: 0.1em;
+      text-transform: uppercase; text-decoration: none;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .nav-cta:hover { background: var(--green-d); transform: translateY(-1px); }
+
+    /* ── Hero ── */
+    .hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center;
+      padding: 7rem 2rem 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 60% 50% at 50% 40%, rgba(61,255,160,0.08) 0%, transparent 70%),
+        radial-gradient(ellipse 80% 60% at 80% 80%, rgba(61,255,160,0.04) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      border: 1px solid var(--green); border-radius: 100px;
+      padding: 0.35rem 1rem; margin-bottom: 2rem;
+      font-size: 0.78rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--green);
+    }
+    .hero-badge span { width: 6px; height: 6px; background: var(--green); border-radius: 50%; animation: pulse 1.8s ease-in-out infinite; }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.5; transform: scale(0.7); }
+    }
+
+    .hero h1 {
+      font-size: clamp(4.5rem, 14vw, 12rem);
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      line-height: 0.9;
+      background: linear-gradient(135deg, #ffffff 0%, #3dffa0 55%, #1aba6e 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-sub {
+      font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+      color: var(--muted); max-width: 600px; margin: 0 auto 1rem;
+      font-weight: 400;
+    }
+
+    .hero-maha {
+      font-size: 0.8rem; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--green-d); margin-bottom: 3rem; font-weight: 600;
+    }
+
+    .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
+
+    .btn-primary {
+      background: var(--green); color: var(--black);
+      padding: 1rem 2.5rem; border-radius: 6px;
+      font-weight: 800; font-size: 1rem; letter-spacing: 0.08em; text-transform: uppercase;
+      text-decoration: none; border: none; cursor: pointer;
+      transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+      box-shadow: 0 0 30px rgba(61,255,160,0.25);
+    }
+    .btn-primary:hover { background: var(--green-d); transform: translateY(-2px); box-shadow: 0 0 45px rgba(61,255,160,0.4); }
+
+    .btn-ghost {
+      background: transparent; color: var(--white);
+      padding: 1rem 2.5rem; border-radius: 6px;
+      font-weight: 700; font-size: 1rem; letter-spacing: 0.08em; text-transform: uppercase;
+      text-decoration: none; border: 1px solid var(--border); cursor: pointer;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .btn-ghost:hover { border-color: var(--green); color: var(--green); }
+
+    .hero-stats {
+      display: flex; gap: 3rem; margin-top: 5rem;
+      border-top: 1px solid var(--border); padding-top: 3rem;
+      flex-wrap: wrap; justify-content: center;
+    }
+    .stat { text-align: center; }
+    .stat-num { font-size: 2.2rem; font-weight: 900; color: var(--green); line-height: 1; }
+    .stat-label { font-size: 0.78rem; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; margin-top: 0.3rem; }
+
+    /* ── Section base ── */
+    section { padding: 6rem 2rem; max-width: 1100px; margin: 0 auto; }
+
+    .section-tag {
+      font-size: 0.75rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--green); margin-bottom: 1rem;
+    }
+
+    h2 {
+      font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 900;
+      letter-spacing: -0.02em; line-height: 1.1; margin-bottom: 1.5rem;
+    }
+
+    .lead { font-size: 1.1rem; color: var(--muted); max-width: 560px; }
+
+    /* ── What Is section ── */
+    .what-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 4rem;
+      align-items: center; margin-top: 3rem;
+    }
+
+    .what-visual {
+      position: relative; aspect-ratio: 1;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .cross-container {
+      position: relative; width: 240px; height: 240px;
+    }
+
+    .cross-v {
+      position: absolute; left: 50%; transform: translateX(-50%);
+      width: 60px; height: 240px;
+      background: linear-gradient(180deg, var(--green) 0%, var(--green-d) 100%);
+      border-radius: 8px;
+      box-shadow: 0 0 40px rgba(61,255,160,0.4);
+    }
+
+    .cross-h {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      width: 240px; height: 60px;
+      background: linear-gradient(90deg, var(--green-d) 0%, var(--green) 50%, var(--green-d) 100%);
+      border-radius: 8px;
+      box-shadow: 0 0 40px rgba(61,255,160,0.4);
+    }
+
+    .cross-label {
+      position: absolute; bottom: -3rem; left: 50%; transform: translateX(-50%);
+      font-size: 0.7rem; letter-spacing: 0.2em; color: var(--green); text-transform: uppercase;
+      white-space: nowrap; font-weight: 700;
+    }
+
+    .glow-ring {
+      position: absolute; inset: -30px; border-radius: 50%;
+      border: 1px solid rgba(61,255,160,0.15);
+      animation: spin 20s linear infinite;
+    }
+    .glow-ring::after {
+      content: ''; position: absolute; top: 0; left: 50%;
+      transform: translateX(-50%); width: 8px; height: 8px;
+      background: var(--green); border-radius: 50%;
+      box-shadow: 0 0 12px var(--green);
+    }
+    @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+    .what-points { list-style: none; margin-top: 2rem; display: flex; flex-direction: column; gap: 1rem; }
+    .what-points li {
+      display: flex; align-items: flex-start; gap: 1rem;
+      padding: 1rem 1.2rem; background: var(--card);
+      border: 1px solid var(--border); border-radius: 8px;
+    }
+    .what-points li .ico {
+      font-size: 1.2rem; flex-shrink: 0; margin-top: 0.05rem;
+    }
+    .what-points li strong { display: block; font-size: 0.95rem; margin-bottom: 0.2rem; }
+    .what-points li span { font-size: 0.85rem; color: var(--muted); }
+
+    /* ── Benefits ── */
+    #benefits { background: var(--dark); max-width: 100%; padding: 6rem 2rem; }
+    #benefits > * { max-width: 1100px; margin-left: auto; margin-right: auto; }
+    #benefits h2, #benefits .section-tag, #benefits .lead { max-width: 1100px; }
+
+    .benefits-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;
+      margin-top: 3rem; max-width: 1100px; margin-left: auto; margin-right: auto;
+    }
+
+    .benefit-card {
+      background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+      padding: 2rem; transition: border-color 0.25s, transform 0.2s;
+    }
+    .benefit-card:hover { border-color: var(--green); transform: translateY(-4px); }
+
+    .benefit-icon {
+      width: 48px; height: 48px; border-radius: 10px;
+      background: rgba(61,255,160,0.1); border: 1px solid rgba(61,255,160,0.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem; margin-bottom: 1.2rem;
+    }
+
+    .benefit-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.6rem; }
+    .benefit-card p { font-size: 0.88rem; color: var(--muted); line-height: 1.7; }
+
+    /* ── Macros ── */
+    .macros-section { text-align: center; }
+    .macros-section .lead { margin: 0 auto 3rem; }
+
+    .macro-bar-wrap { max-width: 600px; margin: 0 auto; display: flex; flex-direction: column; gap: 1.5rem; }
+
+    .macro-row { display: flex; align-items: center; gap: 1rem; }
+    .macro-name { width: 90px; text-align: right; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); flex-shrink: 0; }
+    .macro-track { flex: 1; height: 12px; background: var(--card); border-radius: 100px; overflow: hidden; border: 1px solid var(--border); }
+    .macro-fill { height: 100%; border-radius: 100px; transition: width 1.2s ease; }
+    .macro-fill.protein { background: linear-gradient(90deg, var(--green-d), var(--green)); width: 82%; box-shadow: 0 0 10px rgba(61,255,160,0.5); }
+    .macro-fill.carbs   { background: linear-gradient(90deg, #4a9eff, #7bbdff); width: 10%; }
+    .macro-fill.fat     { background: linear-gradient(90deg, #ffb347, #ffcf7d); width: 8%; }
+    .macro-value { width: 50px; font-size: 0.85rem; font-weight: 700; color: var(--white); flex-shrink: 0; }
+
+    .macro-callout {
+      margin-top: 3rem; padding: 2rem;
+      background: rgba(61,255,160,0.06); border: 1px solid rgba(61,255,160,0.2);
+      border-radius: 12px; font-size: 1.1rem; font-weight: 600;
+    }
+    .macro-callout span { color: var(--green); font-size: 2rem; font-weight: 900; }
+
+    /* ── Testimonials ── */
+    #testimonials { background: var(--dark); max-width: 100%; padding: 6rem 2rem; }
+
+    .testi-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;
+      margin-top: 3rem; max-width: 1100px; margin-left: auto; margin-right: auto;
+    }
+
+    .testi-card {
+      background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+      padding: 1.8rem; display: flex; flex-direction: column; gap: 1.2rem;
+    }
+
+    .stars { color: var(--green); font-size: 0.9rem; letter-spacing: 0.1em; }
+
+    .testi-text { font-size: 0.9rem; color: var(--muted); line-height: 1.75; font-style: italic; }
+
+    .testi-author { display: flex; align-items: center; gap: 0.8rem; margin-top: auto; }
+    .testi-avatar {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--green-d), var(--green));
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 0.85rem; color: var(--black); flex-shrink: 0;
+    }
+    .testi-name { font-size: 0.9rem; font-weight: 700; }
+    .testi-handle { font-size: 0.75rem; color: var(--muted); }
+
+    /* ── CTA ── */
+    .cta-section {
+      text-align: center; padding: 8rem 2rem;
+      position: relative; overflow: hidden;
+    }
+    .cta-section::before {
+      content: '';
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 600px; height: 400px;
+      background: radial-gradient(ellipse, rgba(61,255,160,0.1) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .cta-section h2 { font-size: clamp(2.5rem, 6vw, 5rem); margin-bottom: 1rem; }
+    .cta-section .lead { margin: 0 auto 2.5rem; }
+
+    .price-box {
+      display: inline-flex; align-items: baseline; gap: 0.5rem;
+      margin-bottom: 2.5rem;
+    }
+    .price-box .currency { font-size: 1.5rem; font-weight: 700; color: var(--green); }
+    .price-box .amount { font-size: 4rem; font-weight: 900; color: var(--green); line-height: 1; }
+    .price-box .period { font-size: 0.9rem; color: var(--muted); }
+
+    .cta-note { font-size: 0.8rem; color: var(--muted); margin-top: 1.5rem; }
+
+    /* ── Footer ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 3rem 2rem;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 1.5rem;
+      max-width: 1100px; margin: 0 auto;
+    }
+    .footer-logo { font-size: 1.2rem; font-weight: 900; color: var(--green); letter-spacing: 0.15em; }
+    .footer-links { display: flex; gap: 2rem; list-style: none; }
+    .footer-links a { color: var(--muted); text-decoration: none; font-size: 0.82rem; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--green); }
+    .footer-copy { font-size: 0.78rem; color: var(--muted); }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .what-grid { grid-template-columns: 1fr; }
+      .what-visual { display: none; }
+      .benefits-grid { grid-template-columns: 1fr; }
+      .testi-grid { grid-template-columns: 1fr; }
+      footer { flex-direction: column; align-items: flex-start; }
+      .hero-stats { gap: 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Nav ── -->
+<nav>
+  <a class="nav-logo" href="#">CROTEIN</a>
+  <ul class="nav-links">
+    <li><a href="#what">Product</a></li>
+    <li><a href="#benefits">Benefits</a></li>
+    <li><a href="#macros">Nutrition</a></li>
+    <li><a href="#testimonials">Reviews</a></li>
+  </ul>
+  <a class="nav-cta" href="#cta">Order Now</a>
+</nav>
+
+<!-- ── Hero ── -->
+<div class="hero">
+  <div class="hero-badge">
+    <span></span> MAHA Approved &bull; Clean Label &bull; Real Results
+  </div>
+  <h1>CROTEIN</h1>
+  <p class="hero-sub">The only protein supplement made with real cross&#8209;bred heritage crops — clean, honest, and built for performance.</p>
+  <p class="hero-maha">Make America Healthy Again &bull; Est. 2024</p>
+  <div class="hero-actions">
+    <a class="btn-primary" href="#cta">Shop Now — $49</a>
+    <a class="btn-ghost" href="#what">Learn More</a>
+  </div>
+
+  <div class="hero-stats">
+    <div class="stat">
+      <div class="stat-num">82g</div>
+      <div class="stat-label">Protein per Serving</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">0</div>
+      <div class="stat-label">Artificial Additives</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">100%</div>
+      <div class="stat-label">Real Ingredients</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">50K+</div>
+      <div class="stat-label">Happy Athletes</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── What Is Crotein ── -->
+<section id="what">
+  <p class="section-tag">What is Crotein?</p>
+  <h2>Protein meets<br/>the power of the cross.</h2>
+  <p class="lead">Crotein is forged from a proprietary blend of cross&#8209;bred heritage grains and plant proteins — nature's own formula, perfected over generations and packed into every scoop.</p>
+
+  <div class="what-grid">
+    <div>
+      <ul class="what-points">
+        <li>
+          <span class="ico">🌾</span>
+          <div>
+            <strong>Real Cross-Bred Heritage Crops</strong>
+            <span>Sourced from American farms using time-tested cross-pollination techniques that maximize amino acid density.</span>
+          </div>
+        </li>
+        <li>
+          <span class="ico">🧪</span>
+          <div>
+            <strong>Zero Synthetic Fillers</strong>
+            <span>No maltodextrin, no artificial sweeteners, no proprietary blend excuses. Every ingredient is on the label.</span>
+          </div>
+        </li>
+        <li>
+          <span class="ico">⚡</span>
+          <div>
+            <strong>Complete Amino Profile</strong>
+            <span>All 9 essential amino acids, naturally occurring — your muscle recovery starts at the cellular level.</span>
+          </div>
+        </li>
+        <li>
+          <span class="ico">🇺🇸</span>
+          <div>
+            <strong>Made in America</strong>
+            <span>Manufactured in FDA-registered, cGMP-certified facilities. No overseas shortcuts.</span>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <div class="what-visual">
+      <div class="glow-ring"></div>
+      <div class="cross-container">
+        <div class="cross-v"></div>
+        <div class="cross-h"></div>
+        <div class="cross-label">Real Cross. Real Protein.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Benefits ── -->
+<div id="benefits">
+  <p class="section-tag" style="max-width:1100px;margin:0 auto;">Why Athletes Choose Crotein</p>
+  <h2 style="max-width:1100px;margin:0.5rem auto 0.5rem;">Built to perform.<br/>Made to last.</h2>
+  <p class="lead" style="max-width:1100px;margin:0 auto;">Every ingredient in Crotein was chosen with one goal: give your body exactly what it needs, nothing it doesn't.</p>
+
+  <div class="benefits-grid">
+    <div class="benefit-card">
+      <div class="benefit-icon">💪</div>
+      <h3>Rapid Muscle Recovery</h3>
+      <p>High leucine content from cross-bred legume proteins activates mTOR faster than standard whey isolates, cutting soreness time in half.</p>
+    </div>
+    <div class="benefit-card">
+      <div class="benefit-icon">🔥</div>
+      <h3>Sustained Energy</h3>
+      <p>Low glycemic index carbohydrates from heritage oats keep insulin stable so you stay in the zone longer — no crash, no spike.</p>
+    </div>
+    <div class="benefit-card">
+      <div class="benefit-icon">🌱</div>
+      <h3>Gut-Friendly Formula</h3>
+      <p>Naturally occurring prebiotics and digestive enzymes from fermented grain sources mean no bloat, no discomfort, just clean digestion.</p>
+    </div>
+    <div class="benefit-card">
+      <div class="benefit-icon">🧠</div>
+      <h3>Cognitive Edge</h3>
+      <p>Tryptophan and phenylalanine from real food sources support serotonin and dopamine production. Train hard. Think sharper.</p>
+    </div>
+    <div class="benefit-card">
+      <div class="benefit-icon">🏆</div>
+      <h3>NSF Certified</h3>
+      <p>Every batch is third-party tested for banned substances, heavy metals, and potency. Compete with confidence.</p>
+    </div>
+    <div class="benefit-card">
+      <div class="benefit-icon">⚖️</div>
+      <h3>Transparent Label</h3>
+      <p>Exact milligrams. No proprietary blends. No hiding behind "matrix." What you see on the label is exactly what's in the bag.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ── Macros ── -->
+<section id="macros">
+  <div class="macros-section">
+    <p class="section-tag">Nutrition Facts</p>
+    <h2>Macro-loaded.<br/>Nothing wasted.</h2>
+    <p class="lead">Per 100g serving — numbers that speak for themselves.</p>
+
+    <div class="macro-bar-wrap">
+      <div class="macro-row">
+        <div class="macro-name">Protein</div>
+        <div class="macro-track"><div class="macro-fill protein"></div></div>
+        <div class="macro-value">82g</div>
+      </div>
+      <div class="macro-row">
+        <div class="macro-name">Carbs</div>
+        <div class="macro-track"><div class="macro-fill carbs"></div></div>
+        <div class="macro-value">10g</div>
+      </div>
+      <div class="macro-row">
+        <div class="macro-name">Fat</div>
+        <div class="macro-track"><div class="macro-fill fat"></div></div>
+        <div class="macro-value">8g</div>
+      </div>
+    </div>
+
+    <div class="macro-callout">
+      <span>82g</span> of protein per serving — <br/>
+      that's more than 3 chicken breasts in a single scoop.
+    </div>
+  </div>
+</section>
+
+<!-- ── Testimonials ── -->
+<div id="testimonials">
+  <p class="section-tag" style="max-width:1100px;margin:0 auto 0.5rem;">Real People. Real Gains.</p>
+  <h2 style="max-width:1100px;margin:0 auto 3rem;">50,000+ athletes<br/>can't be wrong.</h2>
+
+  <div class="testi-grid">
+    <div class="testi-card">
+      <div class="stars">★★★★★</div>
+      <p class="testi-text">"I've tried every protein on the market. Crotein is the first one that didn't make me feel bloated. The real crop sourcing actually matters — you can taste the difference."</p>
+      <div class="testi-author">
+        <div class="testi-avatar">JR</div>
+        <div>
+          <div class="testi-name">Jake Rutherford</div>
+          <div class="testi-handle">Competitive Powerlifter, TX</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="testi-card">
+      <div class="stars">★★★★★</div>
+      <p class="testi-text">"As a MAHA advocate, I demand clean ingredients. Crotein is the only protein supplement I'll put in my body. The transparent label alone sold me — I knew exactly what I was getting."</p>
+      <div class="testi-author">
+        <div class="testi-avatar">SM</div>
+        <div>
+          <div class="testi-name">Sarah Malone</div>
+          <div class="testi-handle">CrossFit Coach, Montana</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="testi-card">
+      <div class="stars">★★★★★</div>
+      <p class="testi-text">"82 grams of protein per serving is unreal. I've cut my supplement stack in half since switching to Crotein. Recovery is faster, energy is cleaner. This is the real deal."</p>
+      <div class="testi-author">
+        <div class="testi-avatar">DC</div>
+        <div>
+          <div class="testi-name">Derek Cole</div>
+          <div class="testi-handle">Marathon Runner, Colorado</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── CTA ── -->
+<section class="cta-section" id="cta">
+  <p class="section-tag">Limited Supply</p>
+  <h2>Start fueling<br/>the real you.</h2>
+  <p class="lead">One bag. One scoop. 82 grams of real protein from real cross-bred American crops. No shortcuts.</p>
+
+  <div class="price-box">
+    <span class="currency">$</span>
+    <span class="amount">49</span>
+    <span class="period">/ bag &nbsp;·&nbsp; 30 servings</span>
+  </div>
+
+  <br/>
+  <a class="btn-primary" href="#" style="font-size:1.1rem; padding:1.2rem 3.5rem;">Order Crotein Now</a>
+  <p class="cta-note">Free shipping on orders over $99 &nbsp;·&nbsp; 30-day money-back guarantee &nbsp;·&nbsp; Veteran discount available</p>
+</section>
+
+<!-- ── Footer ── -->
+<footer>
+  <div class="footer-logo">CROTEIN</div>
+  <ul class="footer-links">
+    <li><a href="#">Privacy Policy</a></li>
+    <li><a href="#">Terms of Use</a></li>
+    <li><a href="#">Contact</a></li>
+    <li><a href="#">Store Locator</a></li>
+  </ul>
+  <div class="footer-copy">© 2024 Crotein LLC &nbsp;·&nbsp; A MAHA Health Brand &nbsp;·&nbsp; Made in the USA</div>
+</footer>
+
+</body>
+</html>
